@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/winstonjr/goexpert-desafio-stress-test/internal/entity"
-	"log"
+	"github.com/winstonjr/goexpert-desafio-stress-test/internal/usecase"
 	"net/url"
 	"os"
 )
@@ -36,14 +36,14 @@ var rootCmd = &cobra.Command{
 			return fmt.Errorf("url flag is invalid")
 		}
 
-		flagConcurrency, _ := cmd.Flags().GetUint64("concurrency")
-		flagRequests, _ := cmd.Flags().GetUint64("requests")
+		flagConcurrency, _ := cmd.Flags().GetInt("concurrency")
+		flagRequests, _ := cmd.Flags().GetInt("requests")
 
-		if flagRequests <= uint64(0) {
+		if flagRequests <= 0 {
 			return fmt.Errorf("requests must be greater or equals 1")
 		}
 
-		if flagConcurrency <= uint64(0) {
+		if flagConcurrency <= 0 {
 			return fmt.Errorf("concurrency must be greater or equals 1")
 		}
 
@@ -56,15 +56,9 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		//err := s.Run()
-		//if err != nil {
-		//	panic(err)
-		//}
-		//s.PrintReport()
-
-		log.Println("url: ", stressTestConfig.Url,
-			"concurrency: ", stressTestConfig.Concurrency,
-			"requests: ", stressTestConfig.TotalRequests)
+		st := usecase.NewExecuteStressTestUseCase()
+		results := st.Execute(stressTestConfig)
+		results.PrintReport()
 	},
 }
 
@@ -77,8 +71,8 @@ func Execute() {
 
 func init() {
 	var flagUrl string
-	var flagConcurrency, flagRequests uint64
+	var flagConcurrency, flagRequests int
 	rootCmd.Flags().StringVarP(&flagUrl, "url", "u", "", "URL to stress")
-	rootCmd.Flags().Uint64VarP(&flagConcurrency, "concurrency", "c", 1, "URL to stress")
-	rootCmd.Flags().Uint64VarP(&flagRequests, "requests", "r", 1, "URL to stress")
+	rootCmd.Flags().IntVarP(&flagConcurrency, "concurrency", "c", 1, "URL to stress")
+	rootCmd.Flags().IntVarP(&flagRequests, "requests", "r", 1, "URL to stress")
 }

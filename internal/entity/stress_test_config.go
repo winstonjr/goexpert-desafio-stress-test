@@ -2,11 +2,11 @@ package entity
 
 type StressTestConfig struct {
 	Url           string
-	Concurrency   uint64
-	TotalRequests uint64
+	Concurrency   int
+	TotalRequests int
 }
 
-func NewStressTestConfig(url string, concurrency, requests uint64) *StressTestConfig {
+func NewStressTestConfig(url string, concurrency, requests int) *StressTestConfig {
 	return &StressTestConfig{
 		Url:           url,
 		Concurrency:   concurrency,
@@ -14,7 +14,7 @@ func NewStressTestConfig(url string, concurrency, requests uint64) *StressTestCo
 	}
 }
 
-func (st *StressTestConfig) GetRequestsPerConcurrentExecution() (uint64, uint64) {
+func (st *StressTestConfig) GetRequestsPerConcurrentExecution() (int, int) {
 	if st.Concurrency == 1 {
 		return st.TotalRequests, 0
 	} else if st.Concurrency > 1 {
