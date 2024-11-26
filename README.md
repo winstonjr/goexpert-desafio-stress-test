@@ -1,4 +1,4 @@
-# Desafio goexpert Rate Limiter
+# Desafio goexpert Stress Test
 
 1. Na pasta raiz do projeto
 
